@@ -1,12 +1,17 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import InputList from './InputList';
+import { FiXCircle } from "react-icons/fi";
+
+function removeItem({index, dataList, setDataList}){
+  dataList.splice(index, 1);
+  setDataList([...dataList]);
+}
 
 function updateItem({index, dataList, setDataList}){
   const newList = dataList;
   newList[index].status = !newList[index].status;
   setDataList([...newList]);
-  console.log(newList)
 }
 
 function ItemList({item, index, dataList, setDataList}){
@@ -15,11 +20,19 @@ function ItemList({item, index, dataList, setDataList}){
       {item.status ? 
         <li className="concluida" 
           onClick={() => updateItem({index, dataList, setDataList})}>
-            {index+1} - {item.name}
+            {index+1} - {item.name} 
+            <p>
+              <StyledIcon 
+                onClick={() => removeItem({index, dataList, setDataList})}/>
+            </p>
         </li> 
         : 
         <li onClick={() => updateItem({index, dataList, setDataList})}>
-            {index+1} - {item.name}
+            {index+1} - {item.name} 
+            <p>
+              <StyledIcon 
+                onClick={() => removeItem({index, dataList, setDataList})}/>
+            </p>
         </li> 
       }
     </>
@@ -46,25 +59,40 @@ export default function ItemBox() {
   );
 }
 
+const StyledIcon = styled (FiXCircle)`
+    color: #e22545;
+    position: fixed;
+    right: 4px;
+    top: 4px;
+`;
+
 const Box = styled.ul`
     li{
+      position: relative;
       &.concluida{
         text-decoration: line-through;
         color: #edc4ee;
         scale: 0.97;
       }
+      text-decoration: none;
       list-style-type: none;
       margin: 8px 0;
+      p{
+        display: none;
+      }
       &:hover{
         scale: 1.03;
         border: 1px solid #edc4ee;
         width: 50vw;
+        p{
+          display: flex;
+        }
       }
       transition: all 0.8s;
       border-radius: 5px;
       padding: 4px 30px 4px 8px;
       width: 50vw;
-      word-break: break-all;
-      cursor: pointer; 
+      word-break: break-word;
+      cursor: pointer;
     }
 `;
