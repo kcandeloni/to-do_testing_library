@@ -1,0 +1,16 @@
+import ContainerTodo from "./componets/ContainerTodo";
+import ContainerList from "./componets/ItensBox";
+import ItensBox from "./componets/ItensBox";
+import GlobalStyle from "./componets/common/GlobalStyled";
+
+export default function App (){
+  return (
+    <>
+      <GlobalStyle />
+      <ContainerTodo>
+        <ContainerList>
+          <ItensBox />
+        </ContainerList>
+      </ ContainerTodo>
+    </>);
+}
