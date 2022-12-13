@@ -3,7 +3,9 @@ import { useState } from 'react';
 import InputList from './InputList';
 import { FiXCircle } from "react-icons/fi";
 
-function removeItem({index, dataList, setDataList}){
+function removeItem({index, dataList, setDataList, e}){
+  e.stopPropagation();
+  e.nativeEvent.stopImmediatePropagation();
   dataList.splice(index, 1);
   setDataList([...dataList]);
 }
@@ -26,16 +28,16 @@ function ItemList({item, index, dataList, setDataList}){
             {index+1} - {item.name} 
             <p>
               <StyledIcon 
-                onClick={() => removeItem({index, dataList, setDataList})}/>
+                onClick={(e) => removeItem({index, dataList, setDataList, e})}/>
             </p>
         </li> 
         : 
         <li onClick={() => updateItem({index, dataList, setDataList})}>
-            {index+1} - {item.name} 
-            <p>
-              <StyledIcon 
-                onClick={() => removeItem({index, dataList, setDataList})}/>
-            </p>
+          {index+1} - {item.name} 
+          <p>
+            <StyledIcon 
+              onClick={(e) => removeItem({index, dataList, setDataList, e})}/>
+          </p>
         </li> 
       }
     </>
@@ -70,32 +72,32 @@ const StyledIcon = styled (FiXCircle)`
 `;
 
 const Box = styled.ul`
-    li{
-      position: relative;
-      &.concluida{
-        text-decoration: line-through;
-        color: #edc4ee;
-        scale: 0.97;
-      }
-      text-decoration: none;
-      list-style-type: none;
-      margin: 8px 0;
-      p{
-        display: none;
-      }
-      &:hover{
-        scale: 1.03;
-        border: 1px solid #edc4ee;
-        width: 50vw;
-        p{
-          display: flex;
-        }
-      }
-      transition: all 0.8s;
-      border-radius: 5px;
-      padding: 4px 30px 4px 8px;
-      width: 50vw;
-      word-break: break-word;
-      cursor: pointer;
+  li{
+    position: relative;
+    &.concluida{
+      text-decoration: line-through;
+      color: #edc4ee;
+      scale: 0.97;
     }
+    text-decoration: none;
+    list-style-type: none;
+    margin: 8px 0;
+    p{
+      display: none;
+    }
+    &:hover{
+      scale: 1.03;
+      border: 1px solid #edc4ee;
+      width: 50vw;
+      p{
+        display: flex;
+      }
+    }
+    transition: all 0.8s;
+    border-radius: 5px;
+    padding: 4px 30px 4px 8px;
+    width: 50vw;
+    word-break: break-word;
+    cursor: pointer;
+  }
 `;
