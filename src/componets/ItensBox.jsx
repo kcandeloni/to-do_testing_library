@@ -9,6 +9,9 @@ function removeItem({index, dataList, setDataList}){
 }
 
 function updateItem({index, dataList, setDataList}){
+  if(!dataList[index]){
+    return
+  }
   const newList = dataList;
   newList[index].status = !newList[index].status;
   setDataList([...newList]);

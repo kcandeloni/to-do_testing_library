@@ -18,7 +18,7 @@ export default function InputList({dataList, setDataList}) {
   return (
     <>
     <form onSubmit={handleForm}>
-      <p>To-do</p>
+      <StyledTitle>To-do</StyledTitle>
       <StyledInput
           onChange={(e) => setNewTodo(e.target.value)}
           placeholder="Whith new to-do"
@@ -44,4 +44,8 @@ const StyledInput = styled.input`
     color: #c6c6c6;
   }
   outline: 0;
+`;
+
+const StyledTitle = styled.p`
+  margin: 12px 0;
 `;
