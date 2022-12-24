@@ -27,7 +27,7 @@ describe("Adicionando itens na lista", () => {
     );
     const input = screen.getByPlaceholderText(/Whith/i);
     await userEvent.type(input, "fazer churrasco{enter}");
-    expect(screen.queryByText("bolinha")).toEqual(null);
+    expect(screen.getByText("bolinha")).toEqual(null);
   });
 });
 
@@ -45,15 +45,17 @@ describe("Removendo itens na lista", () => {
 });
 
 describe("Item selecioando", () => {
-  it("Valida se elemento da lista foi selecionado(line-through)", async () => {
-    const { container } = render(
-      <App />,
-    );
-    const input = screen.getByPlaceholderText(/Whith/i);
-    await userEvent.type(input, "fazer churrasco{enter}");
-    const element = container.querySelector("li");
-    await userEvent.click(element);
-    const selected = container.querySelector(".concluida");
-    expect(selected).not.toBe(null);
-  });
+  it("Valida se elemento da lista foi selecionado(line-through)",
+    async () => {
+      const { container } = render(
+        <App />,
+      );
+      const input = screen.getByPlaceholderText(/Whith/i);
+      await userEvent.type(input, "fazer churrasco{enter}");
+      const element = container.querySelector("li");
+      await userEvent.click(element);
+      const selected = container.querySelector(".concluida");
+      expect(selected).not.toBe(null);
+    });
 });
+

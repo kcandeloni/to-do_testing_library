@@ -57,7 +57,7 @@ a {
 body {
 	font-family: 'Raleway', sans-serif;
 	background: #f03e89;
-  color: white;
+  color: #ffffff;
   font-size: 28px;
   font-weight: 700;
 }`;

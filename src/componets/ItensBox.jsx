@@ -1,13 +1,15 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import InputList from './InputList';
 import { FiXCircle } from "react-icons/fi";
+import persistList from '../server/localStorageData';
 
 function removeItem({index, dataList, setDataList, e}){
   e.stopPropagation();
   e.nativeEvent.stopImmediatePropagation();
   dataList.splice(index, 1);
   setDataList([...dataList]);
+  persistList.persistData(dataList);
 }
 
 function updateItem({index, dataList, setDataList}){
@@ -17,6 +19,7 @@ function updateItem({index, dataList, setDataList}){
   const newList = dataList;
   newList[index].status = !newList[index].status;
   setDataList([...newList]);
+  persistList.persistData(newList);
 }
 
 function ItemList({item, index, dataList, setDataList}){
@@ -46,7 +49,13 @@ function ItemList({item, index, dataList, setDataList}){
 
 export default function ItemBox() {
   const [dataList, setDataList] = useState([]);
-
+  useEffect(() => {
+    const localData = persistList.getData();
+    if(setDataList.length > 0){
+    setDataList(localData);
+  }
+  }, []);
+  
   return (
     <>
       <InputList dataList={dataList} setDataList={setDataList} />
@@ -87,7 +96,7 @@ const Box = styled.ul`
     }
     &:hover{
       scale: 1.03;
-      border: 1px solid #edc4ee;
+      border: 1px solid #ffffff;
       width: 50vw;
       p{
         display: flex;

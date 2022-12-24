@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import persistList from '../server/localStorageData';
 
 export default function InputList({dataList, setDataList}) {
   const [newToDo, setNewTodo] = useState("");
@@ -13,6 +14,7 @@ export default function InputList({dataList, setDataList}) {
     }
     setDataList([...dataList, {name: newToDo, status: false}]);
     setNewTodo("");
+    persistList.persistData([...dataList, {name: newToDo, status: false}])
   }
 
   return (
