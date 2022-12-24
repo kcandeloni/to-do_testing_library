@@ -1,7 +1,7 @@
 {
   "name": "to_do_testing_library",
   "version": "1.0.0",
-  "description": "",
+  "description": "create to-do lists to organize your day simply and quickly.",
   "main": "index.js",
   "type": "module",
   "scripts": {
