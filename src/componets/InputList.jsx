@@ -23,7 +23,7 @@ export default function InputList({dataList, setDataList}) {
       <StyledTitle>To-do</StyledTitle>
       <StyledInput
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Whith new to-do"
+          placeholder="Write new to-do"
           value={newToDo}
         />
     </form>
