@@ -28,7 +28,7 @@ export default function InputList({dataList, setDataList}) {
       <ContainerMenu>
         <StyledInput
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Whith new to-do"
+          placeholder="Write new to-do"
           value={newToDo}
         />
         <StyledAdd onClick={(e) => handleForm(e)}/>
