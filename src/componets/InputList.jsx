@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { FiMoreVertical, FiPlus } from "react-icons/fi";
 import persistList from '../server/localStorageData';
@@ -13,8 +14,8 @@ export default function InputList({dataList, setDataList}) {
   function handleForm(e) {
     e.preventDefault();
     if(newToDo.length < 2 || newToDo[0] === ' '){
-        toast("Entrada Inválida");
-        return;
+      toast("Entrada Inválida");
+      return;
     }
     setDataList([...dataList, {name: newToDo, status: false}]);
     setNewTodo("");
@@ -59,6 +60,7 @@ const StyledInput = styled.input`
     color: #c6c6c6;
   }
   outline: 0;
+  border: none;
 `;
 
 const StyledTitle = styled.p`
