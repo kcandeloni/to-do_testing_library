@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import persistList from '../server/localStorageData';
 
 export default function Menu({ setStateMenu, setDataList }) {
   
@@ -9,6 +10,7 @@ export default function Menu({ setStateMenu, setDataList }) {
         <ItemMenu onClick={()=> {
           setDataList([]); 
           setStateMenu(false);
+          persistList.persistData([])
         }}><p>Clear List</p></ItemMenu>
       </BoxMenu>
     </>

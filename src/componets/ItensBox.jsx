@@ -47,15 +47,15 @@ function ItemList({item, index, dataList, setDataList}){
       {item.status ? 
         <li className="concluida">
           {editControll ? 
-            <>
-              {index+1} - 
+            <div>
+              <span>{index+1} -</span> 
               <form onSubmit={(e) => updateNameItem({index, dataList, setDataList, editItem, setEditControll, e})}>
                 <input 
                   onChange={(e) => setEditItem(e.target.value)}
                   placeholder="Write new to-do"
                   value={editItem} />
               </form>
-            </> :
+            </ div> :
             <span onClick={() => updateItem({index, dataList, setDataList})}>
               {index+1} - {item.name}
             </span>}
@@ -74,15 +74,15 @@ function ItemList({item, index, dataList, setDataList}){
         : 
         <li>
           {editControll ? 
-            <>
-              {index+1} - 
+            <div>
+              <span>{index+1} -</span>
               <form onSubmit={(e) => updateNameItem({index, dataList, setDataList, editItem, setEditControll, e})}>
                 <input 
                   onChange={(e) => setEditItem(e.target.value)}
                   placeholder="Write new to-do"
                   value={editItem} />
               </form>
-            </> :
+            </ div> :
             <span onClick={() => updateItem({index, dataList, setDataList})}>
               {index+1} - {item.name}
             </span>}
@@ -130,16 +130,10 @@ export default function ItemBox() {
 
 const StyledDeleteItem = styled (FiXCircle)`
     color: #e22545;
-    position: fixed;
-    right: 4px;
-    top: 4px;
 `;
 
 const StyledEditItem = styled (FiEdit3)`
     color: #ffffff;
-    position: fixed;
-    right: 68px;
-    top: 4px;
     &.concluida{
       color: #edc4ee;
     }
@@ -147,9 +141,6 @@ const StyledEditItem = styled (FiEdit3)`
 
 const StyledMoveItem= styled (FiMove)`
     color: #ffffff;
-    position: fixed;
-    right: 36px;
-    top: 4px;
     &.concluida{
       color: #edc4ee;
     }
@@ -157,10 +148,12 @@ const StyledMoveItem= styled (FiMove)`
 
 const Box = styled.ul`
   li{
+    display: flex;
+    justify-content: space-between;
     position: relative;
     transition: all 0.8s;
     border-radius: 5px;
-    padding: 4px 30px 4px 8px;
+    padding: 4px 4px 4px 8px;
     width: 50vw;
     word-break: break-word;
     cursor: pointer;
@@ -196,11 +189,15 @@ const Box = styled.ul`
       }
     }
     input{
-      margin: 0 0 0 6px;
+      height: 30px;
       width: 100%;
+      margin: 2px 6px;
       border: none;
       border-radius: 5px;
       outline: 0;
+    }
+    div{
+      display: flex;
     }
   }
 `;
