@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import InputList from './InputList';
-import { FiXCircle, FiEdit3, FiMove } from "react-icons/fi";
+import { FiXCircle, FiEdit3, FiCheckCircle } from "react-icons/fi";
 import persistList from '../server/localStorageData';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 function removeItem({index, dataList, setDataList, e}){
   e.stopPropagation();
@@ -25,7 +25,7 @@ function updateItem({index, dataList, setDataList}){
   persistList.persistData(newList);
 }
 
-function  updateNameItem ({index, dataList, setDataList, editItem, setEditControll, e}){
+function updateNameItem ({index, dataList, setDataList, editItem, setEditControll, e}){
   e.preventDefault();
   if(editItem.length < 2 || editItem[0] === ' '){
     toast("Entrada Inválida");
@@ -38,61 +38,83 @@ function  updateNameItem ({index, dataList, setDataList, editItem, setEditContro
   setEditControll(false);
 }
 
-function ItemList({item, index, dataList, setDataList}){
+function ItemList({item, index, dataList, setDataList, provided}){
   const [editControll, setEditControll] = useState(false);
   const [editItem, setEditItem] = useState(item.name);
+  
+  const addEventClick = (event) => {
+    if(event.target.className !== 'focusEdit'){
+      setEditControll(false);
+      window.removeEventListener('click', addEventClick);
+    }
+  };
+
+  function editItemEvent (e){
+    e.stopPropagation();
+    if(!editControll){
+      window.addEventListener('click', addEventClick);
+    }
+    setEditItem(item.name);
+    setEditControll(!editControll);
+  }
 
   return(
     <>
       {item.status ? 
-        <li className="concluida">
-          {editControll ? 
+        <li className="concluida"
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        ref={provided.innerRef}>
+          {editControll ?
             <div>
               <span>{index+1} -</span> 
               <form onSubmit={(e) => updateNameItem({index, dataList, setDataList, editItem, setEditControll, e})}>
-                <input 
+                <input className='focusEdit'
                   onChange={(e) => setEditItem(e.target.value)}
                   placeholder="Write new to-do"
-                  value={editItem} />
+                  value={editItem} 
+                  autoFocus />
               </form>
-            </ div> :
+              <StyledCheckItem onClick={(e) => updateNameItem({index, dataList, setDataList, editItem, setEditControll, e})} />
+            </ div>
+            :
             <span onClick={() => updateItem({index, dataList, setDataList})}>
               {index+1} - {item.name}
             </span>}
             <p>
               <StyledEditItem 
-                className="concluida" 
-                onClick={() => {
-                  setEditItem(item.name)
-                  setEditControll(!editControll);
+                onClick={(e) => {
+                  editItemEvent(e);
                 }}/>
-              <StyledMoveItem className="concluida"/>
               <StyledDeleteItem 
                 onClick={(e) => removeItem({index, dataList, setDataList, e})}/>
             </p>
         </li> 
         : 
-        <li>
+        <li 
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        ref={provided.innerRef}>
           {editControll ? 
             <div>
               <span>{index+1} -</span>
               <form onSubmit={(e) => updateNameItem({index, dataList, setDataList, editItem, setEditControll, e})}>
-                <input 
+                <input className='focusEdit'
                   onChange={(e) => setEditItem(e.target.value)}
                   placeholder="Write new to-do"
-                  value={editItem} />
+                  value={editItem}
+                  autoFocus />
               </form>
+              <StyledCheckItem onClick={(e) => updateNameItem({index, dataList, setDataList, editItem, setEditControll, e})} />
             </ div> :
             <span onClick={() => updateItem({index, dataList, setDataList})}>
               {index+1} - {item.name}
             </span>}
           <p>
             <StyledEditItem 
-              onClick={() => {
-              setEditItem(item.name)
-              setEditControll(!editControll);
+              onClick={(e) => {
+                editItemEvent(e);
               }}/>
-            <StyledMoveItem />
             <StyledDeleteItem 
               onClick={(e) => removeItem({index, dataList, setDataList, e})}/>
           </p>
@@ -111,19 +133,49 @@ export default function ItemBox() {
   }
   }, []);
   
+  function handleOnDragEnd(result) {
+    if (!result.destination) return;
+
+    const items = Array.from(dataList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setDataList(items);
+    persistList.persistData(items);
+  }
+  
   return (
     <>
       <InputList dataList={dataList} setDataList={setDataList} />
-      <Box >
-        {dataList?.map((item, index) => 
-          <ItemList 
-            key={index} 
-            index={index}
-            item={item} 
-            dataList={dataList}
-            setDataList={setDataList}
-            />)}
-      </Box>
+
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="list">
+          {(provided) => (
+            <Box 
+              {...provided.droppableProps}
+              ref={provided.innerRef}>  
+              {dataList?.map((item, index) => {
+                return(
+                  <Draggable key={index} 
+                    draggableId={String(index)} 
+                    index={index}>
+                    {(provided) => (
+                      <ItemList
+                        provided={provided}
+                        key={index} 
+                        index={index}
+                        item={item} 
+                        dataList={dataList}
+                        setDataList={setDataList} />
+                    )}
+                  </Draggable>
+              )}
+          )}
+            {provided.placeholder}
+          </Box>
+          )}
+        </Droppable>
+      </DragDropContext>
     </>
   );
 }
@@ -134,24 +186,18 @@ const StyledDeleteItem = styled (FiXCircle)`
 
 const StyledEditItem = styled (FiEdit3)`
     color: #ffffff;
-    &.concluida{
-      color: #edc4ee;
-    }
 `;
-
-const StyledMoveItem= styled (FiMove)`
+const StyledCheckItem = styled (FiCheckCircle)`
     color: #ffffff;
-    &.concluida{
-      color: #edc4ee;
-    }
+    font-size: 24px;
+    margin: 0 8px;
 `;
 
 const Box = styled.ul`
   li{
     display: flex;
     justify-content: space-between;
-    position: relative;
-    transition: all 0.8s;
+    transition: scale 0.8s;
     border-radius: 5px;
     padding: 4px 4px 4px 8px;
     width: 50vw;
@@ -198,6 +244,8 @@ const Box = styled.ul`
     }
     div{
       display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 `;

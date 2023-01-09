@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { FiMoreVertical, FiPlus } from "react-icons/fi";
